@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1072</width>
+    <height>686</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="button_loadCitra">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>530</y>
+      <width>121</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Load Citra</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>521</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_prosesCitra">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>520</y>
+      <width>121</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Proses Citra</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>10</y>
+      <width>501</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1072</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuOperasi_Titik">
+    <property name="title">
+     <string>Operasi Titik</string>
+    </property>
+    <addaction name="actionOperasi_Pencerahan"/>
+    <addaction name="actionSimple_Contrast"/>
+    <addaction name="actionContrast_Streching"/>
+    <addaction name="actionNegatif"/>
+    <addaction name="actionBiner"/>
+   </widget>
+   <widget class="QMenu" name="menuHistogram">
+    <property name="title">
+     <string>Histogram</string>
+    </property>
+    <addaction name="actionHistogram_Grayscale"/>
+   </widget>
+   <addaction name="menuOperasi_Titik"/>
+   <addaction name="menuHistogram"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOperasi_Pencerahan">
+   <property name="text">
+    <string>Operasi Pencerahan</string>
+   </property>
+  </action>
+  <action name="actionSimple_Contrast">
+   <property name="text">
+    <string>Simple Contrast</string>
+   </property>
+  </action>
+  <action name="actionContrast_Streching">
+   <property name="text">
+    <string>Contrast Streching</string>
+   </property>
+  </action>
+  <action name="actionNegatif">
+   <property name="text">
+    <string>Negatif</string>
+   </property>
+  </action>
+  <action name="actionBiner">
+   <property name="text">
+    <string>Biner</string>
+   </property>
+  </action>
+  <action name="actionHistogram_Grayscale">
+   <property name="text">
+    <string>Histogram Grayscale</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
