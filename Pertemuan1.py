@@ -49,6 +49,9 @@ class ShowImage(QMainWindow):
 
         self.actionfiltering.triggered.connect(self.konvol)
         self.actionmean.triggered.connect(self.mean)
+        self.actiongaussian.triggered.connect(self.gauss)
+        self.actionsharpening.triggered.connect(self.sharpening)
+        self.actionmedian.triggered.connect(self.median_filter)
 
 #function operasi titik
     def fungsi(self):
@@ -347,7 +350,6 @@ class ShowImage(QMainWindow):
         original_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
 
         cv2.imshow("Image Original", original_image)
-        cv2.waitKey()
 
         # Kernel
         kernel = np.array([[6, 0, -6],
@@ -361,19 +363,6 @@ class ShowImage(QMainWindow):
         self.Image = filtered_image
 
         self.displayImage(filtered_image, self.label_2)
-
-    def FilterB(self):
-        img = cv2.imread('buku_blur.jpg', 1)  # Mengambil citra dari gambar yg sudah ada
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # Ubah citra masukan menjadi grayscale
-
-        # Kernel
-        kernel = np.array([[6, 0, -6],
-                           [6, 1, -6],
-                           [6, 0, -6]])
-
-        img_out = self.convolution(img, kernel)  # Lakukan konvolusi
-        self.displayImage(2)  # Menampilkan citra hasil
-        self.Image = img_out  # Simpan citra hasil di self.Image
 
     def convolution(self, X, F):
         height, width = X.shape
@@ -394,27 +383,126 @@ class ShowImage(QMainWindow):
         return out
 
     def mean(self):
-        image1 = cv2.imread('buku_blur.jpg', 1)
+        image1 = cv2.imread('noise.png', 1)
         image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
 
         cv2.imshow("Image Original", image1)
-        cv2.waitKey()
 
-        kernel = np.array([[1, 1, 1, 1, 1, 1],
-                           [1, 1, 1, 1, 1, 1],
-                           [1, 1, 1, 1, 1, 1],
-                           [1, 1, 1, 1, 1, 1],
-                           [1, 1, 1, 1, 1, 1],
-                           [1, 1, 1, 1, 1, 1]])
+        kernel = np.array([[1/9, 1/9, 1/9],
+                           [1/9, 1/9, 1/9],
+                           [1/9, 1/9, 1/9]])
 
         image2 = self.convolution(image1, kernel)
 
-        cv2.imshow("Image Filtered", image2)
+        cv2.imshow("Image Smoothing Using Mean Filter ", image2)
         cv2.waitKey()
         self.Image = image2
 
         self.displayImage(image2, self.label_2)
 
+    def gaussian_kernel(self, size, sigma):
+        kernel = np.fromfunction(
+            lambda x, y: (1 / (2 * math.pi * sigma ** 2)) * np.exp(
+                - ((x - size // 2) ** 2 + (y - size // 2) ** 2) / (2 * sigma ** 2)),
+            (size, size)
+        )
+        return kernel / np.sum(kernel)
+
+    def gaussian_blur(self, image, kernel_size=5, sigma=1.0):
+        kernel = self.gaussian_kernel(kernel_size, sigma)
+        gauss = self.convolution(image, kernel)
+        return gauss
+
+    def gauss(self):
+        image = cv2.imread('noise.png', 1)
+        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        gaussian = self.gaussian_blur(image_gray)
+
+        cv2.imshow("Original Image", image_gray)
+        cv2.imshow("Image Smoothing Using Gaussian Filter", gaussian)
+        cv2.waitKey()
+
+
+
+    def sharpening(self):
+        image = cv2.imread('buku_blur.jpg', 1)
+        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow("Original Image", image_gray)
+
+        sharpened = self.image_sharpening(image_gray)
+        cv2.imshow("Image Sharpenning", sharpened)
+        cv2.waitKey()
+
+    def image_sharpening(self, image):
+        kernel = np.array([[-1, -1, -1],
+                           [-1, 8, -1],
+                           [-1, -1, -1]])
+
+        sharpened = self.convolution(image, kernel)
+
+        return sharpened
+
+    def median_filter(self):
+        image = cv2.imread('noise.png', 1)
+        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow("Original Image", image_gray)
+        filtered_image = self.median_filter_operation(image_gray)
+        cv2.imshow("Median Filtered Image", filtered_image)
+        cv2.waitKey()
+
+    def median_filter_operation(self, image):
+        img_out = np.copy(image)
+        h, w = image.shape
+
+        for i in range(3, h - 3):
+            for j in range(3, w - 3):
+                neighbors = []
+
+                for k in range(-3, 4):
+                    for l in range(-3, 4):
+                        a = image[i + k, j + l]
+                        neighbors.append(a)
+
+                neighbors.sort()
+                median = neighbors[24]
+                img_out[i, j] = median
+
+        return img_out
+
+    def max_filter(self):
+        image = cv2.imread('buku_blur.jpg', 1)
+
+        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow("Original Image", image_gray)
+
+        filtered_image = self.max_filter_operation(image_gray)
+
+        cv2.imshow("Maximum Filtered Image", filtered_image)
+        cv2.waitKey()
+
+    def max_filter_operation(self, image):
+        img_out = np.copy(image)
+        h, w = image.shape
+
+        for i in range(3, h - 3):
+            for j in range(3, w - 3):
+                neighbors = []
+
+                for k in range(-3, 4):
+                    for l in range(-3, 4):
+                        a = image[i + k, j + l]
+                        neighbors.append(a)
+
+                max_value = max(neighbors)
+
+                # Update the pixel value with the maximum
+                img_out.itemset((i, j), max_value)
+
+        return img_out
 
     def displayImage(self, Image, label):
         qformat = QImage.Format_Indexed8
@@ -440,6 +528,18 @@ class ShowImage(QMainWindow):
             self.labelGUI.setScaledContents(True)
 
         label.setPixmap(QPixmap.fromImage(img))
+
+
+    def loadNewImage(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.ReadOnly
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open Image File", "", "Image Files (*.png *.jpg *.bmp *.jpeg *.gif);;All Files (*)", options=options)
+
+        if fileName:
+            # Proses gambar yang baru dimuat (misalnya, tampilkan di aplikasi)
+            new_image = cv2.imread(fileName)
+            # Lakukan operasi yang diperlukan dengan gambar baru (sesuai kebutuhan)
+            self.displayImage(new_image, self.label_2)
 
 
 app = QtWidgets.QApplication(sys.argv)

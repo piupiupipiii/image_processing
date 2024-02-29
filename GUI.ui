@@ -151,6 +151,11 @@
     </property>
     <addaction name="actionfiltering"/>
     <addaction name="actionmean"/>
+    <addaction name="actiongaussian"/>
+    <addaction name="actionsharpening"/>
+    <addaction name="actionmedian"/>
+    <addaction name="actionMax_Filter"/>
+    <addaction name="actionMin_Filter"/>
    </widget>
    <addaction name="menuOperasi_Titik"/>
    <addaction name="menuHistogram"/>
@@ -268,6 +273,31 @@
   <action name="actionmean">
    <property name="text">
     <string>mean</string>
+   </property>
+  </action>
+  <action name="actiongaussian">
+   <property name="text">
+    <string>gaussian</string>
+   </property>
+  </action>
+  <action name="actionsharpening">
+   <property name="text">
+    <string>sharpening</string>
+   </property>
+  </action>
+  <action name="actionmedian">
+   <property name="text">
+    <string>median</string>
+   </property>
+  </action>
+  <action name="actionMax_Filter">
+   <property name="text">
+    <string>Max Filter</string>
+   </property>
+  </action>
+  <action name="actionMin_Filter">
+   <property name="text">
+    <string>Min Filter</string>
    </property>
   </action>
  </widget>
