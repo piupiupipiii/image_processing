@@ -145,11 +145,19 @@
     <addaction name="actionOperasi_OR"/>
     <addaction name="actionOperasi_XOR"/>
    </widget>
+   <widget class="QMenu" name="menuKonvolusi">
+    <property name="title">
+     <string>Operasi Spasial</string>
+    </property>
+    <addaction name="actionfiltering"/>
+    <addaction name="actionmean"/>
+   </widget>
    <addaction name="menuOperasi_Titik"/>
    <addaction name="menuHistogram"/>
    <addaction name="menuOperasi_Geometri"/>
    <addaction name="menuOperasi_Aritmatika"/>
    <addaction name="menuOperasi_Boolean"/>
+   <addaction name="menuKonvolusi"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOperasi_Pencerahan">
@@ -250,6 +258,16 @@
   <action name="actionKali_dan_Bagi">
    <property name="text">
     <string>Kali dan Bagi</string>
+   </property>
+  </action>
+  <action name="actionfiltering">
+   <property name="text">
+    <string>filtering</string>
+   </property>
+  </action>
+  <action name="actionmean">
+   <property name="text">
+    <string>mean</string>
    </property>
   </action>
  </widget>
