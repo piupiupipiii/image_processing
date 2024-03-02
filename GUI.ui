@@ -149,10 +149,36 @@
     <property name="title">
      <string>Operasi Spasial</string>
     </property>
-    <addaction name="actionfiltering"/>
-    <addaction name="actionmean"/>
+    <widget class="QMenu" name="menufiltering">
+     <property name="title">
+      <string>filtering</string>
+     </property>
+     <addaction name="actionKonvolusi_A"/>
+     <addaction name="actionKonvolusi_B"/>
+    </widget>
+    <widget class="QMenu" name="menumean">
+     <property name="title">
+      <string>mean</string>
+     </property>
+     <addaction name="action2x2"/>
+     <addaction name="action3x3"/>
+    </widget>
+    <widget class="QMenu" name="menusharpening">
+     <property name="title">
+      <string>sharpening</string>
+     </property>
+     <addaction name="actioni"/>
+     <addaction name="actionii"/>
+     <addaction name="actioniii"/>
+     <addaction name="actioniv"/>
+     <addaction name="actionv"/>
+     <addaction name="actionvi"/>
+     <addaction name="actionlaplace"/>
+    </widget>
+    <addaction name="menufiltering"/>
+    <addaction name="menumean"/>
     <addaction name="actiongaussian"/>
-    <addaction name="actionsharpening"/>
+    <addaction name="menusharpening"/>
     <addaction name="actionmedian"/>
     <addaction name="actionMax_Filter"/>
     <addaction name="actionMin_Filter"/>
@@ -265,24 +291,9 @@
     <string>Kali dan Bagi</string>
    </property>
   </action>
-  <action name="actionfiltering">
-   <property name="text">
-    <string>filtering</string>
-   </property>
-  </action>
-  <action name="actionmean">
-   <property name="text">
-    <string>mean</string>
-   </property>
-  </action>
   <action name="actiongaussian">
    <property name="text">
     <string>gaussian</string>
-   </property>
-  </action>
-  <action name="actionsharpening">
-   <property name="text">
-    <string>sharpening</string>
    </property>
   </action>
   <action name="actionmedian">
@@ -293,6 +304,61 @@
   <action name="actionMax_Filter">
    <property name="text">
     <string>Max Filter</string>
+   </property>
+  </action>
+  <action name="actionKonvolusi_A">
+   <property name="text">
+    <string>Konvolusi A</string>
+   </property>
+  </action>
+  <action name="actionKonvolusi_B">
+   <property name="text">
+    <string>Konvolusi B</string>
+   </property>
+  </action>
+  <action name="action2x2">
+   <property name="text">
+    <string>2x2</string>
+   </property>
+  </action>
+  <action name="action3x3">
+   <property name="text">
+    <string>3x3</string>
+   </property>
+  </action>
+  <action name="actioni">
+   <property name="text">
+    <string>i</string>
+   </property>
+  </action>
+  <action name="actionii">
+   <property name="text">
+    <string>ii</string>
+   </property>
+  </action>
+  <action name="actioniii">
+   <property name="text">
+    <string>iii</string>
+   </property>
+  </action>
+  <action name="actioniv">
+   <property name="text">
+    <string>iv</string>
+   </property>
+  </action>
+  <action name="actionv">
+   <property name="text">
+    <string>v</string>
+   </property>
+  </action>
+  <action name="actionvi">
+   <property name="text">
+    <string>vi</string>
+   </property>
+  </action>
+  <action name="actionlaplace">
+   <property name="text">
+    <string>laplace</string>
    </property>
   </action>
   <action name="actionMin_Filter">

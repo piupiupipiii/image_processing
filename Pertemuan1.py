@@ -47,11 +47,22 @@ class ShowImage(QMainWindow):
         self.actionOperasi_OR.triggered.connect(self.boolean_or)
         self.actionOperasi_XOR.triggered.connect(self.boolean_xor)
 
-        self.actionfiltering.triggered.connect(self.konvol)
-        self.actionmean.triggered.connect(self.mean)
-        self.actiongaussian.triggered.connect(self.gauss)
-        self.actionsharpening.triggered.connect(self.sharpening)
+        #operasi spasial
+        self.actionKonvolusi_A.triggered.connect(self.konvol_a)
+        self.actionKonvolusi_B.triggered.connect(self.konvol_b)
+        self.action2x2.triggered.connect(self.mean_2x2)
+        self.action3x3.triggered.connect(self.mean_3x3)
+        self.actiongaussian.triggered.connect(self.gaussian_filter)
+        self.actioni.triggered.connect(self.sharpening1)
+        self.actionii.triggered.connect(self.sharpening2)
+        self.actioniii.triggered.connect(self.sharpening3)
+        self.actioniv.triggered.connect(self.sharpening4)
+        self.actionv.triggered.connect(self.sharpening5)
+        self.actionvi.triggered.connect(self.sharpening6)
+        self.actionlaplace.triggered.connect(self.laplace)
         self.actionmedian.triggered.connect(self.median_filter)
+        self.actionMax_Filter.triggered.connect(self.max_filter)
+        self.actionMin_Filter.triggered.connect(self.min_filter)
 
 #function operasi titik
     def fungsi(self):
@@ -345,25 +356,6 @@ class ShowImage(QMainWindow):
         cv2.imshow("Image Operasi AND", operasi)
         cv2.waitKey()
 
-    def konvol(self):
-        original_image = cv2.imread('buku_blur.jpg', 1)
-        original_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
-
-        cv2.imshow("Image Original", original_image)
-
-        # Kernel
-        kernel = np.array([[6, 0, -6],
-                           [6, 1, -6],
-                           [6, 0, -6]])
-
-        filtered_image = self.convolution(original_image, kernel)
-
-        cv2.imshow("Image Filtered", filtered_image)
-        cv2.waitKey()
-        self.Image = filtered_image
-
-        self.displayImage(filtered_image, self.label_2)
-
     def convolution(self, X, F):
         height, width = X.shape
         kernel_height, kernel_width = F.shape
@@ -376,14 +368,78 @@ class ShowImage(QMainWindow):
                 Sum = 0
                 for k in range(-H, H + 1):
                     for l in range(-W, W + 1):
-                        a = X[i + k, j + l]
-                        w = F[H + k, W + l]
-                        Sum += (w * a)
+                        # if 0 <= i + k < height and 0 <= j + l < width:
+                            a = X[i + k, j + l]
+                            w = F[H + k, W + l]
+                            Sum += (w * a)
                 out[i, j] = Sum
         return out
 
-    def mean(self):
-        image1 = cv2.imread('noise.png', 1)
+    def konvol_a(self):
+        original_image = cv2.imread('sayur.jpeg', 1)
+        original_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow("Image Original", original_image)
+
+        # Kernel
+        kernel = np.array([[6, 0, -6],
+                           [6, 1, -6],
+                           [6, 0, -6]])
+
+        filtered_image = self.convolution(original_image, kernel)
+        cv2.imshow("Image Filtered A", filtered_image)
+        cv2.waitKey()
+
+    def konvol_b(self):
+        original_image = cv2.imread('bunga.jpeg', 1)
+        original_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow("Image Original", original_image)
+
+        # Kernel
+        kernel = np.array([[1, 1, 1],
+                           [1, 1, 1],
+                           [1, 1, 1]])
+
+        out = cv2.filter2D(original_image, -1, kernel)
+
+        cv2.imshow("Image Smoothing Using Mean Filter 2x2", out)
+        cv2.waitKey()
+
+
+
+    def mean(self, X, F):
+        height, width = X.shape
+        kernel_height, kernel_width = F.shape
+        H = kernel_height // 2
+        W = kernel_width // 2
+        out = np.zeros_like(X)
+
+        for i in range(H, height - H):
+            for j in range(W, width - W):
+                total = 0
+                for k in range(-H, H + 1):
+                    for l in range(-W, W + 1):
+                        total += X[i + k, j + l]
+                out[i, j] = total / (kernel_height * kernel_width)  # Menghitung rata-rata
+        return out
+
+    def mean_2x2(self):
+        image1 = cv2.imread('orang.jpeg', 1)
+        image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow("Image Original", image1)
+
+        kernel = np.array([[1/4, 1/4],
+                           [1/4, 1/4]])
+
+        image2 = self.mean(image1, kernel)
+
+        cv2.imshow("Image Smoothing Using Mean Filter 2x2 ", image2)
+        cv2.waitKey()
+
+    def mean_3x3(self):
+        image1 = cv2.imread('orang.jpeg', 1)
         image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
 
         cv2.imshow("Image Original", image1)
@@ -392,57 +448,159 @@ class ShowImage(QMainWindow):
                            [1/9, 1/9, 1/9],
                            [1/9, 1/9, 1/9]])
 
+        image2 = self.mean(image1, kernel)
+        cv2.imshow("Image Smoothing Using Mean Filter 3x3", image2)
+        cv2.waitKey()
+
+    def laplace(self):
+        image1 = cv2.imread('orang.jpeg', 1)
+        image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow("Image Original", image1)
+
+        kernel = (1.0 / 16) * np.array([
+            [0, 0, -1, 0, 0],
+            [0, -1, -2, -1, 0],
+            [-1, -2, 16, -2, -1],
+            [0, -1, -2, -1, 0],
+            [0, 0, -1, 0, 0]])
+
         image2 = self.convolution(image1, kernel)
-
-        cv2.imshow("Image Smoothing Using Mean Filter ", image2)
+        cv2.imshow("Image Smoothing Using Laplace", image2)
         cv2.waitKey()
-        self.Image = image2
 
-        self.displayImage(image2, self.label_2)
 
-    def gaussian_kernel(self, size, sigma):
-        kernel = np.fromfunction(
-            lambda x, y: (1 / (2 * math.pi * sigma ** 2)) * np.exp(
-                - ((x - size // 2) ** 2 + (y - size // 2) ** 2) / (2 * sigma ** 2)),
-            (size, size)
+    def gaussian_filter(self):
+        image1 = cv2.imread('bunga_noise.jpg', 1)
+        image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow("Image Original", image1)
+
+        kernel = (1.0 / 345) * np.array([[1, 5, 7, 5, 1],
+                                    [5, 20, 33, 20, 5],
+                                    [7, 33, 55, 33, 7],
+                                    [5, 20, 33, 20, 5],
+                                    [1, 5, 7, 5, 1]])
+
+        img_out = self.convolution(image1, kernel)
+        cv2.imshow('Gaussian Filtering', img_out)
+        cv2.waitKey()
+
+#sharpening
+    def sharpening(self, image, kernel):
+        kernel_size = kernel.shape[0]
+        image_height, image_width = image.shape
+        pad_amount = kernel_size // 2
+        padded_image = np.pad(image, pad_amount, mode='constant')
+        output = np.zeros_like(image)
+        for y in range(image_height):
+            for x in range(image_width):
+                output[y, x] = np.sum(padded_image[y:y + kernel_size, x:x + kernel_size] * kernel)
+        return output
+
+
+    def sharpening1(self):
+        image = cv2.imread('mawar_blur.jpeg', 1)
+        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        cv2.imshow("Original Image", image_gray)
+
+        kernel = np.array(
+                [
+                    [-1, -1, -1],
+                    [-1, 8, -1],
+                    [-1, -1, -1]
+                ]
+            )
+
+        sharpened = self.sharpening(image_gray, kernel)
+        cv2.imshow("Image Sharpenning 1", sharpened)
+        cv2.waitKey()
+
+    def sharpening2(self):
+        image = cv2.imread('bunga_blur.jpeg', 1)
+        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        cv2.imshow("Original Image", image_gray)
+
+        kernel = np.array(
+            [
+                [-1, -1, -1],
+                [-1, 9, -1],
+                [-1, -1, -1]
+            ]
         )
-        return kernel / np.sum(kernel)
 
-    def gaussian_blur(self, image, kernel_size=5, sigma=1.0):
-        kernel = self.gaussian_kernel(kernel_size, sigma)
-        gauss = self.convolution(image, kernel)
-        return gauss
+        sharpened = self.sharpening(image_gray, kernel)
+        cv2.imshow("Image Sharpenning 2", sharpened)
+        cv2.waitKey()
 
-    def gauss(self):
-        image = cv2.imread('noise.png', 1)
+    def sharpening3(self):
+        image = cv2.imread('mawar_blur.jpeg', 1)
         image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-        gaussian = self.gaussian_blur(image_gray)
-
         cv2.imshow("Original Image", image_gray)
-        cv2.imshow("Image Smoothing Using Gaussian Filter", gaussian)
+
+        kernel = np.array(
+            [
+                [0, -1, -0],
+                [-1, 5, -1],
+                [0, -1, 0]
+            ]
+        )
+
+        sharpened = self.sharpening(image_gray, kernel)
+        cv2.imshow("Image Sharpenning 3", sharpened)
+        cv2.waitKey()
+
+    def sharpening4(self):
+        image = cv2.imread('mawar_blur.jpeg', 1)
+        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        cv2.imshow("Original Image", image_gray)
+
+        kernel = np.array(
+            [
+                [1, -2, 1],
+                [-2, 5, -2],
+                [1, -2, 1]
+            ]
+        )
+
+        sharpened = self.sharpening(image_gray, kernel)
+        cv2.imshow("Image Sharpenning 4", sharpened)
         cv2.waitKey()
 
 
-
-    def sharpening(self):
-        image = cv2.imread('buku_blur.jpg', 1)
+    def sharpening5(self):
+        image = cv2.imread('mawar_blur.jpeg', 1)
         image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
         cv2.imshow("Original Image", image_gray)
 
-        sharpened = self.image_sharpening(image_gray)
-        cv2.imshow("Image Sharpenning", sharpened)
+        kernel = np.array(
+            [
+                [1, 2, 1],
+                [-2, 4, -2],
+                [1, -2, 1]
+            ]
+        )
+
+        sharpened = self.sharpening(image_gray, kernel)
+        cv2.imshow("Image Sharpenning 5", sharpened)
         cv2.waitKey()
 
-    def image_sharpening(self, image):
-        kernel = np.array([[-1, -1, -1],
-                           [-1, 8, -1],
-                           [-1, -1, -1]])
+    def sharpening6(self):
+        image = cv2.imread('mawar_blur.jpeg', 1)
+        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        cv2.imshow("Original Image", image_gray)
 
-        sharpened = self.convolution(image, kernel)
+        kernel = np.array(
+            [
+                [0, 1, 0],
+                [1, -4, 1],
+                [0, 1, 0]
+            ]
+        )
 
-        return sharpened
+        sharpened = self.sharpening(image_gray, kernel)
+        cv2.imshow("Image Sharpenning 6", sharpened)
+        cv2.waitKey()
 
     def median_filter(self):
         image = cv2.imread('noise.png', 1)
@@ -473,7 +631,7 @@ class ShowImage(QMainWindow):
         return img_out
 
     def max_filter(self):
-        image = cv2.imread('buku_blur.jpg', 1)
+        image = cv2.imread('mawar.jpeg', 1)
 
         image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -503,6 +661,35 @@ class ShowImage(QMainWindow):
                 img_out.itemset((i, j), max_value)
 
         return img_out
+
+    def min_filter_operation(self, image):
+        img_out = np.copy(image)
+        h, w = image.shape
+
+        for i in range(3, h - 3):
+            for j in range(3, w - 3):
+                neighbors = []
+                for k in range(-3, 4):
+                    for l in range(-3, 4):
+                        neighbors.append(image[i + k, j + l])
+
+                min_val = min(neighbors)
+                img_out.itemset((i, j), min_val)
+
+        return img_out
+
+    def min_filter(self):
+        image = cv2.imread('mawar.jpeg', 1)
+
+        image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        cv2.imshow("Original Image", image_gray)
+
+        filtered_image = self.min_filter_operation(image_gray)
+
+        cv2.imshow("Minimum Filtered Image", filtered_image)
+        cv2.waitKey()
+
 
     def displayImage(self, Image, label):
         qformat = QImage.Format_Indexed8
